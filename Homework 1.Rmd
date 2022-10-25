@@ -1,0 +1,376 @@
+---
+
+title: "STA 4990-E02 Homework 1"
+
+author: "Jeffrey Robbins"
+
+date: "Due Monday 6/20/22 by 5:00pm"
+
+output:
+
+    pdf_document:
+
+      df_print: kable
+
+---
+
+
+
+
+
+
+
+```{r global_options, include=FALSE}
+
+# these are some optional settings that will change how some features look
+
+# you do not need to change them.
+
+knitr::opts_chunk$set(out.width = "50%", out.height="50%", fig.align="center", warning=FALSE, message=FALSE)
+
+par(pch=16) # change points to filled circles
+
+```
+
+
+
+
+
+### Loading Relevant Packages
+
+
+
+```{r}
+
+# load any relevant packages here, if necessary
+
+library(ISLR)
+
+library(mclust)
+
+library(Lock5Data)
+
+library(mlbench)
+
+library(ggplot2)
+
+```
+
+
+
+
+
+# Question 1
+
+
+
+
+
+## Part (a)
+
+```{r}
+
+?Carseats
+
+head(Carseats)
+
+```
+
+
+
+## Part (b)
+
+``` {r}
+
+?Wage
+
+head(Wage)
+
+```
+
+
+
+## Part (c)
+
+```{r}
+
+?Default
+
+head(Default)
+
+```
+
+
+
+## Part (d)
+
+```{r}
+
+?banknote
+
+head(banknote)
+
+```
+
+
+
+
+
+## Part (e)
+
+```{r}
+
+?SleepStudy
+
+head(SleepStudy)
+
+```
+
+
+
+
+
+## Part (f)
+
+```{r}
+
+?PimaIndiansDiabetes2
+
+data(PimaIndiansDiabetes2)
+
+head(PimaIndiansDiabetes2)
+
+```
+
+
+
+
+
+
+
+# Question 2
+
+
+
+
+
+## Part (a)
+
+```{r}
+
+ggplot(data = PimaIndiansDiabetes2) +
+  geom_boxplot(mapping=aes(x=diabetes, y=glucose))
+
+```
+
+
+
+
+
+## Part (b)
+
+```{r}
+
+ggplot(data = SleepStudy)+
+  geom_point(mapping=aes(x=ClassesMissed, y=GPA))
+
+```
+
+
+
+
+
+## Part (c)
+
+```{r}
+
+ggplot(data = SleepStudy)+
+  geom_boxplot(mapping=aes(x=LarkOwl, y=ClassesMissed))
+
+```
+
+
+
+
+
+## Part (d)
+
+```{r}
+
+ggplot(data = SleepStudy) + 
+
+  geom_point(mapping = aes(x = ClassesMissed,
+
+                           y = GPA, color=LarkOwl))
+
+```
+
+
+
+
+
+## Part (e)
+
+```{r}
+
+ggplot(data = PimaIndiansDiabetes2) + 
+
+    geom_point(mapping = aes(x = mass,
+
+                             y = glucose, color=diabetes))
+
+```
+
+
+
+
+
+
+
+
+
+
+
+# Question 3
+
+
+
+
+
+## Part (a)
+
+```{r}
+
+C = data.frame(Carseats)
+
+
+
+  for(i in 2:ncol(Carseats)){
+
+    print(ggplot(data = Carseats) + 
+
+    geom_point(mapping = aes(x = C[,i],
+
+                             y = Sales))+
+
+                             labs(x = names(Carseats)[i]))
+
+  }
+
+```
+
+
+
+
+
+## Part (b)
+
+```{r}
+
+for(i in 2:ncol(Carseats)){
+
+  F <- (class(Carseats[,i])) == "factor"
+
+  if(F>0){
+
+    New = (as.numeric(Carseats[,i]))
+
+    print(ggplot(data = Carseats) + 
+
+    geom_point(mapping = aes(x = New,
+
+                             y = Sales))+
+
+                             labs(x = names(Carseats)[i]), y = Sales)
+
+  }else{
+
+    print(ggplot(data = Carseats) + 
+
+      geom_point(mapping = aes(x = C[,i],
+
+                             y = Sales))+
+
+                              labs(x = names(Carseats)[i]),y = Sales)
+
+}}
+
+```
+
+
+
+The difference between the graphs from (a) and (b) are that all graphs from part (b) have a numeric x-axis, where as the graphs in (a) have an x-axis for every class of the catagorical variables
+
+
+
+
+
+
+
+
+
+
+
+# Question 4
+
+```{r}
+
+plot_y <- function(A,y_index){
+
+  for(i in 1:ncol(A)){
+
+    print(ggplot(data = A) + 
+
+    geom_point(mapping = aes(x = A[,i],
+
+                             y = A[,y_index]))+
+
+                             labs(x = names(A)[i], y = names(A)[y_index]))
+
+}
+
+}
+
+
+
+plot_y(Wage,10)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+# Question 5
+
+```{r}
+
+deviation_scatter <- function(x,y){
+
+  y_bar <- mean(y)
+
+  plot(c(x),(c(y) - y_bar))
+
+}
+
+
+
+deviation_scatter(Carseats$Price,Carseats$Sales)
+
+
+
+
+
+ggplot(data = Carseats) + 
+
+  geom_point(mapping = aes(x = Price,
+
+                           y = Sales)) 
+
+```
